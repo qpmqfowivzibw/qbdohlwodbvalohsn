@@ -10,7 +10,13 @@ const toBool = (x) => {
 };
 const parseCommaSeparated = (x) => (x ? x.split(",").map(item => item.trim()) : []);
 
-const DATABASE_URL = process.env.DATABASE_URL || "./SuperCore/database.db";
+const DATABASE_URL = process.env.DATABASE_URL || path.join(__dirname, "SuperCore", "database.db");
+
+// Ensure the database directory exists
+const dbDir = path.dirname(DATABASE_URL);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
 
 module.exports = {
   
