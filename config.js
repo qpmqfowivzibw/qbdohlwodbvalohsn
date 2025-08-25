@@ -1,6 +1,5 @@
 const { Sequelize } = require("sequelize");
 const fs = require("fs");
-const path = require("path");
 require("dotenv").config();
 
 // Helper functions
@@ -11,20 +10,14 @@ const toBool = (x) => {
 };
 const parseCommaSeparated = (x) => (x ? x.split(",").map(item => item.trim()) : []);
 
-// Use absolute path for database
-const DATABASE_URL = process.env.DATABASE_URL || path.join(__dirname, "SuperCore", "database.db");
-
-// Ensure the database directory exists
-const dbDir = path.dirname(DATABASE_URL);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
+const DATABASE_URL = process.env.DATABASE_URL || "./SuperCore/database.db";
 
 module.exports = {
   
   LOGS: toBool(process.env.LOGS ?? 'false'),
   ANTI_DELETE: toBool(process.env.ANTI_DELETE ?? 'false'),
-  ANTI_DELETE_PATH: process.env.ANTI_DELETE_PATH || "",
+  ANTI_DELETE_PATH: process.env.
+  ANTI_DELETE_PATH || "",
   
   // Bot Behavior
   PREFIX: process.env.PREFIX && process.env.PREFIX.trim() !== "" ? process.env.PREFIX : "^",
@@ -58,12 +51,13 @@ module.exports = {
   SUDO: parseCommaSeparated(process.env.SUDO || "2348034420510,2349060853189"),
   GEMINI_API: process.env.GEMINI_API || "",
   
+  // Database
   DATABASE_URL: DATABASE_URL,
   DATABASE:
-    DATABASE_URL.includes('.db') || DATABASE_URL.includes('sqlite')
+    DATABASE_URL === "./SuperCore/database.db"
       ? new Sequelize({
           dialect: "sqlite",
-          storage: DATABASE_URL, 
+          storage: DATABASE_URL,
           logging: false,
         })
       : new Sequelize(DATABASE_URL, {
