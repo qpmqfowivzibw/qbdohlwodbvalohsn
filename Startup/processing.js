@@ -4,14 +4,20 @@ const path = require("path");
 const config = require("../config");
 const connect = require("../Framework/System/connection");
 const axios = require("axios");
-const chalk = require('chalk')
+const chalk = require('chalk');
 const os = require('os');
 const { getandRequirePlugins } = require("../SuperCore/Schema/plugins");
 const File = require("megajs").File;
 const StartUpTime = require("../SuperCore/Schema/Uptime");
 
-// Set base directory to the parent of Startup folder
-global.__basedir = path.join(__dirname, '..');
+// Get the root directory of the project (where package.json is located)
+const rootDir = path.resolve(__dirname, '..');
+const draculaMdDir = path.join(rootDir, "DraculaMd");
+const superCoreDir = path.join(rootDir, "SuperCore");
+const frameworkDir = path.join(rootDir, "Framework");
+
+
+console.log(superCoreDir)
 
 const readAndRequireFiles = async (directory) => {
   try {
@@ -28,15 +34,15 @@ const readAndRequireFiles = async (directory) => {
 };
 
 const systemInfo = {
-    Hostname: os.hostname(),
-    Platform: os.platform(),
-    Architecture: os.arch(),
-    Uptime: `${Math.floor(process.uptime() / 60)} minutes`,
-    Memory: `${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB`,
-    CPUs: os.cpus().length,
-    NodeVersion: process.version,
-    RAMUsage: `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`,
-    Threads: os.cpus().length * 2,
+  Hostname: os.hostname(),
+  Platform: os.platform(),
+  Architecture: os.arch(),
+  Uptime: `${Math.floor(process.uptime() / 60)} minutes`,
+  Memory: `${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB`,
+  CPUs: os.cpus().length,
+  NodeVersion: process.version,
+  RAMUsage: `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`,
+  Threads: os.cpus().length * 2,
 };
 
 console.log(chalk.bold.hex('#6A5ACD')('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'));
@@ -46,14 +52,14 @@ console.log(chalk.bold.hex('#6A5ACD')('━━━━━━━━━━━━━�
 console.log(chalk.cyan('📡 System Information:'));
 console.log(chalk.gray('─────────────────────────────'));
 Object.entries(systemInfo).forEach(([key, value]) => {
-    console.log(`${chalk.yellow(key.padEnd(14))}: ${chalk.white(value)}`);
+  console.log(`${chalk.yellow(key.padEnd(14))}: ${chalk.white(value)}`);
 });
 console.log(chalk.gray('─────────────────────────────\n'));
 
 console.log(chalk.green.bold('✅ All systems operational.\n'));
 
 async function loadSession() {
-  const credsPath = path.join(__basedir, "DraculaMd", "creds.json");
+  const credsPath = path.join(draculaMdDir, "creds.json");
   
   try {
     if (fs.existsSync(credsPath)) {
@@ -61,8 +67,8 @@ async function loadSession() {
       return JSON.parse(fs.readFileSync(credsPath, 'utf8'));
     }
 
-    if (!fs.existsSync(path.join(__basedir, "DraculaMd"))) {
-      fs.mkdirSync(path.join(__basedir, "DraculaMd"));
+    if (!fs.existsSync(draculaMdDir)) {
+      fs.mkdirSync(draculaMdDir, { recursive: true });
     }
 
     if (config.SESSION_ID) {
@@ -127,11 +133,13 @@ async function loadSession() {
 async function initialize() {
   try {
     if (config.SESSION_ID) {
+      console.log("Loading session...");
       await loadSession();
     }
     
-    // Use __basedir for all paths
-    await readAndRequireFiles(path.join(__basedir, "SuperCore/Schema/"));
+    // Load schema files
+    await readAndRequireFiles(path.join(superCoreDir, "Schema"));
+    console.log("Syncing Database");
     await config.DATABASE.sync();
     
     (async () => {
@@ -142,10 +150,10 @@ async function initialize() {
       }
     })();
 
-    console.log("⬇  Installing Workers...");
-    await readAndRequireFiles(path.join(__basedir, "SuperCore/Workers/"));
-   await getandRequirePlugins();
-    console.log("✅ Workers Installed Successfully!");
+    console.log("⬇  Installing Plugins...");
+    await readAndRequireFiles(path.join(superCoreDir, "Workers"));
+    await getandRequirePlugins();
+    console.log("✅ Plugins Installed!");
 
     return await connect();
   } catch (error) {
