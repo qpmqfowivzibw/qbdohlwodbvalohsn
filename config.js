@@ -54,10 +54,10 @@ module.exports = {
   // Database
   DATABASE_URL: DATABASE_URL,
   DATABASE:
-    DATABASE_URL === "./SuperCore/database.db"
+    DATABASE_URL.includes('.db') // Check if it's SQLite (contains .db)
       ? new Sequelize({
           dialect: "sqlite",
-          storage: DATABASE_URL,
+          storage: DATABASE_URL, // This is now an absolute path
           logging: false,
         })
       : new Sequelize(DATABASE_URL, {
