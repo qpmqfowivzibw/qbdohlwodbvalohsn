@@ -3,6 +3,8 @@ const fs = require("fs");
 require("dotenv").config();
 const path = require('path');
 
+const rootDir = path.resolve(__dirname, '.');
+
 // Helper functions
 const toBool = (x) => {
   if (typeof x === 'boolean') return x;
@@ -11,7 +13,7 @@ const toBool = (x) => {
 };
 const parseCommaSeparated = (x) => (x ? x.split(",").map(item => item.trim()) : []);
 
-const DATABASE_URL = process.env.DATABASE_URL || path.join(__dirname, "SuperCore", "database.db");
+const DATABASE_URL = process.env.DATABASE_URL || path.join(rootDir, "SuperCore", "database.db");
 
 // Ensure the database directory exists
 const dbDir = path.dirname(DATABASE_URL);
