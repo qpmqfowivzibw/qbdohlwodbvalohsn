@@ -3,7 +3,9 @@ const fs = require("fs");
 require("dotenv").config();
 const path = require('path');
 
-const rootDir = path.resolve(__dirname, '.');
+// Get the root directory by going up two levels from config.js location
+// (config.js is in the root, so we need to go up to the actual project root)
+const rootDir = path.resolve(__dirname, '..');
 
 // Helper functions
 const toBool = (x) => {
@@ -21,15 +23,14 @@ if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
 
-console.log(DATABASE_URL)
-console.log(dbDir)
+console.log("Config Database Path:", DATABASE_URL);
+console.log("Config Database Directory:", dbDir);
 
 module.exports = {
   
   LOGS: toBool(process.env.LOGS ?? 'false'),
   ANTI_DELETE: toBool(process.env.ANTI_DELETE ?? 'false'),
-  ANTI_DELETE_PATH: process.env.
-  ANTI_DELETE_PATH || "",
+  ANTI_DELETE_PATH: process.env.ANTI_DELETE_PATH || "",
   
   // Bot Behavior
   PREFIX: process.env.PREFIX && process.env.PREFIX.trim() !== "" ? process.env.PREFIX : "^",
