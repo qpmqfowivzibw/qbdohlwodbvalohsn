@@ -1,6 +1,7 @@
 const { Sequelize } = require("sequelize");
 const fs = require("fs");
 require("dotenv").config();
+const path = require('path');
 
 // Helper functions
 const toBool = (x) => {
