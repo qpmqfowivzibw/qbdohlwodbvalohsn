@@ -176,15 +176,6 @@ async function initialize() {
     console.log("📊 Loading database schemas...");
     await readAndRequireFiles(directories.schema);
     
-    // Test database connection
-    try {
-      await config.DATABASE.authenticate();
-      console.log('✅ Database connection established successfully.');
-    } catch (dbError) {
-      console.error('❌ Database connection failed:', dbError.message);
-    }
-    
-    // Sync database
     await config.DATABASE.sync();
     console.log('✅ Database synchronized successfully.');
     
