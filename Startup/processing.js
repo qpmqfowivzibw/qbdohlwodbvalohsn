@@ -13,46 +13,6 @@ const StartUpTime = require("../SuperCore/Schema/Uptime");
 // Set base directory to the parent of Startup folder
 global.__basedir = path.join(__dirname, '..');
 
-// Fix database path - extract storage path from the Sequelize instance or use DATABASE_URL
-let databaseStoragePath;
-if (config.DATABASE && config.DATABASE.options && config.DATABASE.options.storage) {
-  // For SQLite with storage option
-  databaseStoragePath = config.DATABASE.options.storage;
-} else if (config.DATABASE_URL && config.DATABASE_URL.includes('./')) {
-  // For SQLite with DATABASE_URL
-  databaseStoragePath = config.DATABASE_URL;
-} else {
-  // Fallback to default path
-  databaseStoragePath = path.join(__basedir, "SuperCore", "database.db");
-}
-
-// Ensure the database path is absolute
-if (databaseStoragePath && !path.isAbsolute(databaseStoragePath)) {
-  databaseStoragePath = path.join(__basedir, databaseStoragePath);
-}
-
-// Ensure the directory exists
-const dbDir = path.dirname(databaseStoragePath);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
-
-// Define all directory paths
-const directories = {
-  schema: path.join(__basedir, "SuperCore", "Schema"),
-  workers: path.join(__basedir, "SuperCore", "Workers"),
-  draculaMd: path.join(__basedir, "DraculaMd"),
-  framework: path.join(__basedir, "Framework"),
-  startup: path.join(__basedir, "Startup")
-};
-
-// Create all directories if they don't exist
-Object.values(directories).forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-});
-
 const readAndRequireFiles = async (directory) => {
   try {
     const files = await fsp.readdir(directory);
@@ -93,12 +53,16 @@ console.log(chalk.gray('──────────────────�
 console.log(chalk.green.bold('✅ All systems operational.\n'));
 
 async function loadSession() {
-  const credsPath = path.join(directories.draculaMd, "creds.json");
+  const credsPath = path.join(__basedir, "DraculaMd", "creds.json");
   
   try {
     if (fs.existsSync(credsPath)) {
       console.log('✅ Using existing session credentials');
       return JSON.parse(fs.readFileSync(credsPath, 'utf8'));
+    }
+
+    if (!fs.existsSync(path.join(__basedir, "DraculaMd"))) {
+      fs.mkdirSync(path.join(__basedir, "DraculaMd"));
     }
 
     if (config.SESSION_ID) {
@@ -162,33 +126,14 @@ async function loadSession() {
 
 async function initialize() {
   try {
-    console.log("📁 Directory structure initialized:");
-    console.log(`   - Schema: ${directories.schema}`);
-    console.log(`   - Workers: ${directories.workers}`);
-    console.log(`   - Session: ${directories.draculaMd}`);
-    console.log(`   - Database: ${databaseStoragePath}`);
-    
     if (config.SESSION_ID) {
       await loadSession();
     }
     
-    // Load schema files
-    console.log("📊 Loading database schemas...");
-    await readAndRequireFiles(directories.schema);
-    
-    // Test database connection
-    try {
-      await config.DATABASE.authenticate();
-      console.log('✅ Database connection established successfully.');
-    } catch (dbError) {
-      console.error('❌ Database connection failed:', dbError.message);
-    }
-    
-    // Sync database
+    // Use __basedir for all paths
+    await readAndRequireFiles(path.join(__basedir, "SuperCore/Schema/"));
     await config.DATABASE.sync();
-    console.log('✅ Database synchronized successfully.');
     
-    // Initialize startup time tracking
     (async () => {
       await StartUpTime.sync();
       const existing = await StartUpTime.findOne();
@@ -197,31 +142,16 @@ async function initialize() {
       }
     })();
 
-    // Load workers
-    console.log("⬇️  Installing Workers...");
-    await readAndRequireFiles(directories.workers);
-    
-    // Load plugins
-    await getandRequirePlugins();
-    console.log("✅ Workers & Plugins Installed Successfully!");
+    console.log("⬇  Installing Workers...");
+    await readAndRequireFiles(path.join(__basedir, "SuperCore/Workers/"));
+   await getandRequirePlugins();
+    console.log("✅ Workers Installed Successfully!");
 
-    // Establish WhatsApp connection
-    console.log("🔗 Establishing WhatsApp connection...");
     return await connect();
   } catch (error) {
-    console.error("❌ Initialization error:", error);
+    console.error("Initialization error:", error);
     return process.exit(1); 
   }
 }
 
-// Handle the initialization promise
-initialize()
-  .then(conn => {
-    if (conn) {
-      console.log("🎉 Bot initialization completed successfully!");
-    }
-  })
-  .catch(error => {
-    console.error("💥 Fatal initialization error:", error);
-    process.exit(1);
-  });
+initialize();
