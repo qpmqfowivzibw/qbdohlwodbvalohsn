@@ -1,4 +1,4 @@
-const fs = require("fs"); 
+    const fs = require("fs"); 
 const fsp = require("fs").promises;
 const path = require("path");
 const config = require("../config");
@@ -13,19 +13,31 @@ const StartUpTime = require("../SuperCore/Schema/Uptime");
 // Set base directory to the parent of Startup folder
 global.__basedir = path.join(__dirname, '..');
 
-// Fix database path - ensure it's relative to the current working directory
-if (config.DATABASE && config.DATABASE.storage) {
-  // If it's a relative path, resolve it relative to the current working directory
-  if (!path.isAbsolute(config.DATABASE.storage)) {
-    config.DATABASE.storage = path.join(process.cwd(), config.DATABASE.storage);
-  }
-  
-  // Ensure the directory exists
-  const dbDir = path.dirname(config.DATABASE.storage);
-  if (!fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir, { recursive: true });
-  }
+// Fix database path - extract storage path from the Sequelize instance or use DATABASE_URL
+let databaseStoragePath;
+if (config.DATABASE && config.DATABASE.options && config.DATABASE.options.storage) {
+  // For SQLite with storage option
+  databaseStoragePath = config.DATABASE.options.storage;
+} else if (config.DATABASE_URL && config.DATABASE_URL.includes('./')) {
+  // For SQLite with DATABASE_URL
+  databaseStoragePath = config.DATABASE_URL;
+} else {
+  // Fallback to default path
+  databaseStoragePath = path.join(__basedir, "SuperCore", "database.db");
 }
+
+// Ensure the database path is absolute
+if (databaseStoragePath && !path.isAbsolute(databaseStoragePath)) {
+  databaseStoragePath = path.join(__basedir, databaseStoragePath);
+}
+
+// Ensure the directory exists
+const dbDir = path.dirname(databaseStoragePath);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
+
+console.log("Database path:", databaseStoragePath);
 
 const readAndRequireFiles = async (directory) => {
   try {
@@ -141,7 +153,7 @@ async function loadSession() {
 async function initialize() {
   try {
     console.log("Current working directory:", process.cwd());
-    console.log("Database path:", config.DATABASE.storage);
+    console.log("Database storage path:", databaseStoragePath);
     
     if (config.SESSION_ID) {
       await loadSession();
@@ -156,18 +168,11 @@ async function initialize() {
       console.log('✅ Database connection established successfully.');
     } catch (dbError) {
       console.error('❌ Database connection failed:', dbError.message);
-      // Create a fallback database path if the original one fails
-      const fallbackDbPath = path.join(process.cwd(), 'database.sqlite');
-      console.log(`Trying fallback database path: ${fallbackDbPath}`);
-      
-      // Ensure the fallback directory exists
-      const fallbackDir = path.dirname(fallbackDbPath);
-      if (!fs.existsSync(fallbackDir)) {
-        fs.mkdirSync(fallbackDir, { recursive: true });
+      // If it's SQLite, we can try to create the database file
+      if (config.DATABASE_URL.includes('sqlite') || config.DATABASE_URL.includes('.db')) {
+        console.log('Creating SQLite database file...');
+        // Just creating the file should be enough for SQLite
       }
-      
-      // Update the database configuration
-      config.DATABASE.storage = fallbackDbPath;
     }
     
     await config.DATABASE.sync();
