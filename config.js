@@ -3,18 +3,9 @@ const fs = require("fs");
 require("dotenv").config();
 const path = require('path');
 
-// Get the root directory by going up two levels from config.js location
-// (config.js is in the root, so we need to go up to the actual project root)
-const rootDir = path.resolve(__dirname, '..');
 
-// Helper functions
-const toBool = (x) => {
-  if (typeof x === 'boolean') return x;
-  if (typeof x === 'string') return x.trim().toLowerCase() === 'true';
-  return false;
-};
-const parseCommaSeparated = (x) => (x ? x.split(",").map(item => item.trim()) : []);
-
+// Use process.cwd() to get the current working directory (where the script is run from)
+const rootDir = process.cwd();
 const DATABASE_URL = process.env.DATABASE_URL || path.join(rootDir, "SuperCore", "database.db");
 
 // Ensure the database directory exists
@@ -25,6 +16,15 @@ if (!fs.existsSync(dbDir)) {
 
 console.log("Config Database Path:", DATABASE_URL);
 console.log("Config Database Directory:", dbDir);
+
+
+const toBool = (x) => {
+  if (typeof x === 'boolean') return x;
+  if (typeof x === 'string') return x.trim().toLowerCase() === 'true';
+  return false;
+};
+const parseCommaSeparated = (x) => (x ? x.split(",").map(item => item.trim()) : []);
+
 
 module.exports = {
   
