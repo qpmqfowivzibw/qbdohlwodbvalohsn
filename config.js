@@ -1,23 +1,8 @@
 const { Sequelize } = require("sequelize");
 const fs = require("fs");
 require("dotenv").config();
-const path = require('path');
 
-
-// Use process.cwd() to get the current working directory (where the script is run from)
-const rootDir = process.cwd();
-const DATABASE_URL = process.env.DATABASE_URL || path.join(rootDir, "SuperCore", "database.db");
-
-// Ensure the database directory exists
-const dbDir = path.dirname(DATABASE_URL);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
-
-console.log("Config Database Path:", DATABASE_URL);
-console.log("Config Database Directory:", dbDir);
-
-
+// Helper functions
 const toBool = (x) => {
   if (typeof x === 'boolean') return x;
   if (typeof x === 'string') return x.trim().toLowerCase() === 'true';
@@ -25,12 +10,14 @@ const toBool = (x) => {
 };
 const parseCommaSeparated = (x) => (x ? x.split(",").map(item => item.trim()) : []);
 
+const DATABASE_URL = process.env.DATABASE_URL || "./SuperCore/database.db";
 
 module.exports = {
   
   LOGS: toBool(process.env.LOGS ?? 'false'),
   ANTI_DELETE: toBool(process.env.ANTI_DELETE ?? 'false'),
-  ANTI_DELETE_PATH: process.env.ANTI_DELETE_PATH || "",
+  ANTI_DELETE_PATH: process.env.
+  ANTI_DELETE_PATH || "",
   
   // Bot Behavior
   PREFIX: process.env.PREFIX && process.env.PREFIX.trim() !== "" ? process.env.PREFIX : "^",
@@ -67,10 +54,10 @@ module.exports = {
   // Database
   DATABASE_URL: DATABASE_URL,
   DATABASE:
-    DATABASE_URL.includes('.db') // Check if it's SQLite (contains .db)
+    DATABASE_URL === "./SuperCore/database.db"
       ? new Sequelize({
           dialect: "sqlite",
-          storage: DATABASE_URL, // This is now an absolute path
+          storage: DATABASE_URL,
           logging: false,
         })
       : new Sequelize(DATABASE_URL, {
