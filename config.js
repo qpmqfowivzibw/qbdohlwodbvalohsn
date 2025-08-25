@@ -19,6 +19,9 @@ if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
 
+console.log(DATABASE_URL)
+console.log(dbDir)
+
 module.exports = {
   
   LOGS: toBool(process.env.LOGS ?? 'false'),
