@@ -10,7 +10,7 @@ const toBool = (x) => {
 };
 const parseCommaSeparated = (x) => (x ? x.split(",").map(item => item.trim()) : []);
 
-const DATABASE_URL = process.env.DATABASE_URL || "./SuperCore/database.db";
+const DATABASE_URL = process.env.DATABASE_URL || "./database.db";
 
 module.exports = {
   
@@ -54,7 +54,7 @@ module.exports = {
   // Database
   DATABASE_URL: DATABASE_URL,
   DATABASE:
-    DATABASE_URL === "./SuperCore/database.db"
+    DATABASE_URL === "./database.db"
       ? new Sequelize({
           dialect: "sqlite",
           storage: DATABASE_URL,
