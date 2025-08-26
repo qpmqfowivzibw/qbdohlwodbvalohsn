@@ -674,8 +674,17 @@ command(
     if (!input) return await message.reply("❌ *Provide a movie name to download*");
    
     try {
-           
-      const result = await getJson(`https://kajsjsjsjssjjssjscadau500-abdbwldbsodbmnwnd.hf.space/api/movie?query=${encodeURIComponent(input)}`)
+    
+    
+    const https = require("https");
+
+const agent = new https.Agent({  
+  rejectUnauthorized: false,  
+});
+
+const result = await getJson(`https://api.kingdrax.my.id/api/movie?query=${encodeURIComponent(input)}`, {
+  httpsAgent: agent
+});
            
       
       const videoUrl = result.download_link
