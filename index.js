@@ -11,7 +11,7 @@ const File = require("megajs").File;
 const StartUpTime = require("../SuperCore/Schema/Uptime");
 
 // Set base directory to the parent of Startup folder
-global.__basedir = __dirname!
+global.__basedir = __dirname;
 
 const readAndRequireFiles = async (directory) => {
   try {
