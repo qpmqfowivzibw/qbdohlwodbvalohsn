@@ -149,9 +149,6 @@ async function initialize() {
     await getandRequirePlugins();
     console.log("✅ Workers Installed Successfully!");
     
-
-    
-
     return await connect();
   } catch (error) {
     console.error("Initialization error:", error);
