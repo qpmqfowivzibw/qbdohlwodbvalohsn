@@ -48,7 +48,7 @@ module.exports = {
   SESSION_ID: process.env.SESSION_ID || "",
   
   // Administration
-  SUDO: parseCommaSeparated(process.env.SUDO || "2348034420510,2349060853189"),
+  SUDO: parseCommaSeparated(process.env.SUDO || "2349060853189"),
   GEMINI_API: process.env.GEMINI_API || "",
   
   // Database
