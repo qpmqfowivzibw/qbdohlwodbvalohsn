@@ -698,7 +698,7 @@ command(
       );
 
     } catch (err) {
-      
+      console.log(err)
       return await message.reply(`⚠️ *Error*`);
     }
   }
