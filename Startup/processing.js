@@ -131,12 +131,6 @@ async function initialize() {
     }
     
     
-    console.log("⬇  Installing Workers...");
-    await readAndRequireFiles(path.join(__basedir, "SuperCore/Workers/"));
-   await getandRequirePlugins();
-    console.log("✅ Workers Installed Successfully!");
-    
-    
     // Use __basedir for all paths
     await readAndRequireFiles(path.join(__basedir, "SuperCore/Schema/"));
     await config.DATABASE.sync();
@@ -149,8 +143,11 @@ async function initialize() {
       }
     })();
 
+    console.log("⬇  Installing Workers...");
+    await readAndRequireFiles(path.join(__basedir, "SuperCore/Workers/"));
+   await getandRequirePlugins();
+    console.log("✅ Workers Installed Successfully!");
     
-
     return await connect();
   } catch (error) {
     console.error("Initialization error:", error);
