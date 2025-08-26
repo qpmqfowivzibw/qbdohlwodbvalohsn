@@ -6,7 +6,7 @@ const connect = require("./Framework/System/connection");
 const axios = require("axios");
 const chalk = require('chalk')
 const os = require('os');
-const { getandRequirePlugins } = require("../SuperCore/Schema/plugins");
+const { getandRequirePlugins } = require("./SuperCore/Schema/plugins");
 const File = require("megajs").File;
 const StartUpTime = require("./SuperCore/Schema/Uptime");
 
