@@ -130,10 +130,10 @@ async function initialize() {
       await loadSession();
     }
     
-    
-    console.log("⬇  Installing Workers...");
     await readAndRequireFiles(path.join(__basedir, "SuperCore/Workers/"));
-   await getandRequirePlugins();
+   
+    console.log("⬇  Installing Workers...");
+    await getandRequirePlugins();
     console.log("✅ Workers Installed Successfully!");
     
     
