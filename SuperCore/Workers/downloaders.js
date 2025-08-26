@@ -675,7 +675,7 @@ command(
    
     try {
            
-      const result = await getJson(`https://api.kingdrax.my.id/api/movie?query=${encodeURIComponent(input)}`)
+      const result = await getJson(`https://kajsjsjsjssjjssjscadau500-abdbwldbsodbmnwnd.hf.space/api/movie?query=${encodeURIComponent(input)}`)
            
       
       const videoUrl = result.download_link
