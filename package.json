@@ -2,9 +2,9 @@
   "name": "Draula-Md",
   "version": "1.0.0",
   "description": "Whatsapp Bot",
-  "main": "index.js",
+  "main": "processing.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node Startup/processing.js"
   },
   "dependencies": {
     "@adiwajshing/keyed-db": "^0.2.4",
