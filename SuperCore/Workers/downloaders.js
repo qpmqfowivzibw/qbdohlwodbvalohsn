@@ -675,11 +675,11 @@ command(
    
     try {
            
-      const result = await getJson(`https://api.kingdrax.my.id/api/movie?query=${encodeURIComponent(input)}`)
+      const result = await axios.get(`https://api.kingdrax.my.id/api/movie?query=${encodeURIComponent(input)}`)
            
       
-      const videoUrl = result.download_link
-      const title = result.title
+      const videoUrl = result.data.download_link
+      const title = result.data.title
       
       const downloadMsg = await message.reply(`📹 *Downloading: ${title}...*`);
       
