@@ -2,9 +2,9 @@
   "name": "Draula-Md",
   "version": "1.0.0",
   "description": "Whatsapp Bot",
-  "main": "processing.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node Startup/processing.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "@adiwajshing/keyed-db": "^0.2.4",
@@ -15,7 +15,7 @@
     "acrcloud": "latest",
     "adm-zip": "^0.5.16",
     "axios": "^1.7.7",
-    "baileys": "npm:baileys-alpha@latest",
+    "baileys": "npm:baileys@latest",
     "bitly": "^4.1.1",
     "chalk": "~4.1.0",
     "cheerio": "^1.0.0-rc.12",
@@ -27,7 +27,7 @@
     "form-data": "^4.0.0",
     "got": "^11.8.2",
     "heroku-client": "^3.1.0",
-    "jimp": "^0.16.13",
+    "jimp": "^1.6.0",
     "jsdom": "^22.1.0",
     "jsqr": "^1.4.0",
     "megajs": "latest",
