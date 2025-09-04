@@ -84,7 +84,7 @@ command(
     // Decide destination
     let destination;
     if (path === "chat") {
-      destination = msg.from;
+      destination = msg.senderPn;
     } else if (path === "private") {
       destination = message.user;
     } else if (path.endsWith(".net") || path.endsWith(".us")) {
@@ -110,7 +110,7 @@ command(
     await console.log(msg)
 
     // Extract sender details
-    const senderJid = msg.sender || msg.key?.participant || msg.key?.remoteJid;
+    const senderJid = msg.senderPn || msg.key?.participant || msg.key?.remoteJid;
     const senderNum = senderJid?.split("@")[0];
     const mentions = [senderJid];
 
