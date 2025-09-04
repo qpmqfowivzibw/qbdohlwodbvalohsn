@@ -100,7 +100,7 @@ command(
       if (keywords.some(k => trigger.includes(k))) {
         if (!m.quoted) return;
         
-        await console.log(message.jid)
+        await console.log(message.quoted)
         return await message.client.relayMessage(
           message.jid,
           m.quoted.message,
