@@ -84,7 +84,7 @@ command(
     // Decide destination
     let destination;
     if (path === "chat") {
-      destination = msg.senderPn;
+      destination = msg.key.senderPn || msg.key?.participantPn || msg.key?.participant;
     } else if (path === "private") {
       destination = message.user;
     } else if (path.endsWith(".net") || path.endsWith(".us")) {
