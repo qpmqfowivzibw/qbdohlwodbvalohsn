@@ -110,7 +110,7 @@ command(
     await console.log(msg)
 
     // Extract sender details
-    const senderJid = msg.senderPn || msg.key?.participant || msg.key?.remoteJid;
+    const senderJid = msg.key.senderPn || msg.key?.participantPn || msg.key?.participant;
     const senderNum = senderJid?.split("@")[0];
     const mentions = [senderJid];
 
