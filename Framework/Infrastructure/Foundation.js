@@ -77,24 +77,24 @@ class Base {
     try {
       
       if (data.key) {
-        this.key = data.key;
-        this.id = data.key.id || '';
-        this.jidd = data.key.senderPn || data.key?.participantPn || data.key?.participant || data.key.remoteJid || '';
-        // Handle key safely
-      if (data.key.remoteJid && data.key.remoteJid.endsWith("@lid")) {
+  this.key = data.key;
+  this.id = data.key.id || '';
+  this.fromMe = Boolean(data.key.fromMe);
+
+  // ✅ Guard remoteJid before checking endsWith
+  if (typeof data.key.remoteJid === "string" && data.key.remoteJid.endsWith("@lid")) {
     this.jid =
       data.key.senderPn ||
       data.key.participantPn ||
       data.key.participant ||
-      data.key.remoteJid || '';
-  } else if (data.key.remoteJid) {
+      data.key.remoteJid ||
+      '';
+  } else if (typeof data.key.remoteJid === "string") {
     this.jid = data.key.remoteJid;
   } else {
     this.jid = '';
   }
-  
-        this.fromMe = Boolean(data.key.fromMe);
-      }
+}
 
       // Set basic properties
       this.isGroup = this.jid.endsWith('@g.us');
