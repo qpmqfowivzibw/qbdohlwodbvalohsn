@@ -27,7 +27,7 @@
     "form-data": "^4.0.0",
     "got": "^11.8.2",
     "heroku-client": "^3.1.0",
-    "jimp": "^1.6.0",
+    "jimp": "^0.16.3",
     "jsdom": "^22.1.0",
     "jsqr": "^1.4.0",
     "megajs": "latest",
