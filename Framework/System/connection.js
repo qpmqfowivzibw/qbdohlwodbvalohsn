@@ -220,7 +220,7 @@ const handleMessages = (conn) => async (m) => {
   if (m.type !== "notify") return;
 
   const msg = await serialize(JSON.parse(JSON.stringify(m.messages[0])), conn);
-  await saveMessage(m.messages[0], msg.key.senderPn || msg.key?.participantPn || msg.key?.participant);
+  await saveMessage(m.messages[0], msg.sender);
 
   if (config.AUTO_READ) {
     await conn.readMessages([msg.key]);
