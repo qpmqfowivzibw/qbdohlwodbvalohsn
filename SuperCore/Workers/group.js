@@ -79,7 +79,7 @@ command(
     if (!(await groupAdminCheck(message))) return;
 
     const target = match || message.reply_message?.jid;
-    
+    await console.log(message)
     console.log(message.reply_message)
     if (!target) return await message.reply("⚠️ *Mention or reply to a user to promote.*");
 
