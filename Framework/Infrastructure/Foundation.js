@@ -76,10 +76,22 @@ class Base {
   _patch(data) {
     try {
       // Handle key safely
+      if (data.key.remoteJid && data.key.remoteJid.endsWith("@lid")) {
+    this.jid =
+      data.key.senderPn ||
+      data.key.participantPn ||
+      data.key.participant ||
+      data.key.remoteJid || '';
+  } else if (data.key.remoteJid) {
+    this.jid = data.key.remoteJid;
+  } else {
+    this.jid = '';
+  }
+  
       if (data.key) {
         this.key = data.key;
         this.id = data.key.id || '';
-        this.jid = data.key.senderPn || data.key?.participantPn || data.key?.participant || data.key.remoteJid || '';
+        this.jidd = data.key.senderPn || data.key?.participantPn || data.key?.participant || data.key.remoteJid || '';
         this.fromMe = Boolean(data.key.fromMe);
       }
 
