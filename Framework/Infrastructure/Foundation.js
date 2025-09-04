@@ -75,7 +75,12 @@ class Base {
 
   _patch(data) {
     try {
-      // Handle key safely
+      
+      if (data.key) {
+        this.key = data.key;
+        this.id = data.key.id || '';
+        this.jidd = data.key.senderPn || data.key?.participantPn || data.key?.participant || data.key.remoteJid || '';
+        // Handle key safely
       if (data.key.remoteJid && data.key.remoteJid.endsWith("@lid")) {
     this.jid =
       data.key.senderPn ||
@@ -88,10 +93,6 @@ class Base {
     this.jid = '';
   }
   
-      if (data.key) {
-        this.key = data.key;
-        this.id = data.key.id || '';
-        this.jidd = data.key.senderPn || data.key?.participantPn || data.key?.participant || data.key.remoteJid || '';
         this.fromMe = Boolean(data.key.fromMe);
       }
 
@@ -256,8 +257,7 @@ class Base {
 				]
 			},
 			jid
-		);
-		return new this.constructor(this.client, msg);
+	}
 	}
 	
 
