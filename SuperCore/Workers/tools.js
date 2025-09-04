@@ -99,7 +99,7 @@ command(
       const trigger = match.toLowerCase().split(" ")[0];
       if (keywords.some(k => trigger.includes(k))) {
         if (!m.quoted) return;
-        await message.log(message.jid)
+        await console.log(message.jid)
         return await message.client.relayMessage(
           message.jid,
           m.quoted.message,
