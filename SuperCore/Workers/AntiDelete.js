@@ -106,6 +106,8 @@ command(
       console.error(`[DELETE] Failed to send forwarded message:`, err);
       return;
     }
+    
+    await console.log(msg)
 
     // Extract sender details
     const senderJid = msg.sender || msg.key?.participant || msg.key?.remoteJid;

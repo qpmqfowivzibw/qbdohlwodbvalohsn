@@ -173,16 +173,24 @@ command(
     pattern: "adeletepath",
     fromMe: true,
     type: "settings",
-    desc: "♻️ Set anti-delete logging path (chat/private)",
+    desc: "♻️ Set anti-delete logging path (chat/private/JID)",
   },
   async (message, match) => {
-    if (!match) return await message.reply("Usage: *.adeletepath chat/private*");
+    if (!match) {
+      return await message.reply("Usage: *.adeletepath chat/private/JID*");
+    }
 
     const choice = match.trim().toLowerCase();
     const validOptions = ["chat", "private"];
 
-    if (!validOptions.includes(choice)) {
-      return await message.reply("❌ Invalid option. Use only *chat* or *private*.");
+    // Validate
+    if (
+      !validOptions.includes(choice) &&
+      !(choice.endsWith(".net") || choice.endsWith(".us"))
+    ) {
+      return await message.reply(
+        "❌ Invalid option. Use *chat*, *private*, or a valid JID ending with `.net` or `.us`."
+      );
     }
 
     const oldVal = getEnvVariable("ANTI_DELETE_PATH");
