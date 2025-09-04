@@ -77,11 +77,20 @@ class Base {
     try {
       // Handle key safely
       if (data.key) {
-        this.key = data.key;
-        this.id = data.key.id || '';
-        this.jid = data.key.senderPn || data.key?.participantPn || data.key?.participant || data.key.remoteJid || '';
-        this.fromMe = Boolean(data.key.fromMe);
-      }
+  this.key = data.key;
+  this.id = data.key.id || '';
+  this.fromMe = Boolean(data.key.fromMe);
+
+  if (data.key.remoteJid?.endsWith("@lid")) {
+    this.jid =
+      data.key.senderPn ||
+      data.key.participantPn ||
+      data.key.participant ||
+      '';
+  } else {
+    this.jid = data.key.remoteJid || '';
+  }
+}
 
       // Set basic properties
       this.isGroup = this.jid.endsWith('@g.us');
