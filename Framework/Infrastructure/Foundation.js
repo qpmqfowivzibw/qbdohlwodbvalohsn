@@ -79,8 +79,7 @@ class Base {
       if (data.key) {
         this.key = data.key;
         this.id = data.key.id || '';
-        this.jid = data.key.remoteJid || '';
-        this.jidd = data.sender || data.from || "";
+        this.jid = data.key.senderPn || data.key.remoteJid || '';
         this.fromMe = Boolean(data.key.fromMe);
       }
 
